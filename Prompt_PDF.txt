@@ -1,0 +1,47 @@
+ja fiz toda a parte escrita do meu tp1 do sistema da biblioteca (os requisitos funcionais e nao funcionais, os casos de uso em uml com atores e fluxos, e a justificativa de escopo e suposicoes). coloca tudo isso num pdf organizado e limpo pra eu salvar na pasta docs/ do meu projeto, nao precisa mudar o texto nem inventar nada nao, so formata direitinho em pdf pra mim por favor. meu nome e bernardo martins ramos, disciplina 26E4_5 e a trilha e c# com .net 10 e visual studio community.
+
+requisitos funcionais:
+rf01 acervo: permitir ao bibliotecario/administrador cadastrar, consultar, atualizar e remover livros (titulo, autor, isbn) e exemplares fisicos (codigo de patrimonio, estado de conservacao e vinculo com um livro).
+rf02 membros: permitir ao bibliotecario/administrador cadastrar, consultar, atualizar e remover membros (nome, matricula e tipo: aluno, professor ou funcionario).
+rf03 consulta: permitir que membros e bibliotecarios/administradores consultem livros e vejam a disponibilidade e o estado de conservacao dos exemplares.
+rf04 emprestimo prazo: registrar emprestimo de exemplar disponivel e em boas condicoes para membro com cadastro valido, com prazo padrao de 14 dias corridos a partir da retirada.
+rf05 emprestimo limite: impedir que o membro tenha mais de 3 emprestimos ativos ao mesmo tempo.
+rf06 emprestimo exemplar unico: impedir que o mesmo exemplar tenha mais de um emprestimo ativo ao mesmo tempo.
+rf07 conservacao: bloquear emprestimo de exemplar danificado ou indisponivel ate o bibliotecario regularizar a condicao.
+rf08 reserva regra: permitir que membro com cadastro valido reserve um livro (ligado ao livro, nao a um exemplar especifico) apenas quando nao houver exemplar disponivel e existir pelo menos um exemplar emprestado no momento.
+rf09 reserva gestao: permitir consultar e gerenciar reservas.
+rf10 devolucao: encerrar o emprestimo ativo na devolucao e gravar a data efetiva de devolucao.
+rf11 multa calculo: calcular multa por dia corrido de atraso apos o prazo (ate a devolucao efetiva) e ligar ao membro e ao emprestimo.
+rf12 multa pagamento: permitir ao bibliotecario/administrador consultar e atualizar a situacao de pagamento das multas.
+rf13 permissoes: restringir cadastros, alteracoes, remocoes e gestao de multas ao bibliotecario/administrador.
+
+requisitos nao funcionais:
+
+rnf01 trilha e evolucao: usar c# (.net 10 sdk lts + visual studio community), comecando por programa standalone simples sem orientacao a objetos neste tp1 e evoluindo depois ate servico web com persistencia, api e autenticacao.
+
+rnf02 organizacao: manter repositorio no github com pastas docs/ e src/, identificando os arquivos com nome do aluno e codigo da disciplina.
+
+rnf03 mensagens: mostrar mensagens diretas no console indicando o motivo quando uma regra bloquear a operacao.
+
+rnf04 calculo: manter consistencia no prazo de 14 dias corridos, no limite de 3 emprestimos e nos dias corridos de atraso.
+
+rnf05 desempenho: responder rapido nas consultas e validacoes rodando localmente.
+
+casos de uso uml:
+
+atores: membro (aluno, professor ou funcionario) e bibliotecario/administrador.
+
+no diagrama o membro faz consultar acervo e disponibilidade, realizar emprestimo e realizar reserva. o bibliotecario/administrador faz consultar acervo e disponibilidade, realizar emprestimo, devolver exemplar e calcular multa, e gerenciar acervo, membros e multas.
+
+cenario 1 realizar emprestimo (uc02): atores bibliotecario/administrador e membro. pre condicao membro cadastrado e exemplar registrado no sistema. fluxo principal: 1 bibliotecario informa matricula do membro e patrimonio do exemplar, 2 sistema confere se cadastro e valido e se tem menos de 3 emprestimos ativos, 3 sistema confere se exemplar esta disponivel, sem emprestimo ativo e em boas condicoes, 4 sistema registra emprestimo com data de retirada e prazo de 14 dias corridos e atualiza o exemplar. fluxo alternativo: se cadastro for invalido, ja tiver 3 emprestimos ativos ou exemplar estiver danificado/indisponivel/ja emprestado, bloqueia e avisa o motivo.
+
+cenario 2 realizar reserva (uc03): ator membro. pre condicao membro com cadastro valido e livro cadastrado. fluxo principal: 1 membro informa matricula e o livro (vinculado ao titulo/livro, nao a um exemplar especifico), 2 sistema confere cadastro valido, se nao ha exemplar disponivel e se existe pelo menos um exemplar emprestado, 3 sistema registra reserva com a data e confirma. fluxo alternativo: se tiver exemplar disponivel ou nao tiver nenhum exemplar emprestado (ou cadastro invalido), nao permite reserva e informa o motivo.
+
+cenario 3 devolver exemplar e calcular multa (uc04): ator bibliotecario/administrador. pre condicao existir emprestimo ativo para o exemplar. fluxo principal: 1 bibliotecario informa o exemplar e a data efetiva de devolucao, 2 sistema encerra emprestimo ativo, grava data efetiva e verifica prazo de 14 dias corridos, 3 estando no prazo nao gera multa e libera o exemplar. fluxo alternativo: se passar do prazo calcula dias corridos de atraso ate a devolucao efetiva, gera multa vinculada ao membro e ao emprestimo e mostra o valor. se nao tiver emprestimo ativo bloqueia.
+
+escopo e suposicoes:
+
+no tp1 foquei em levantar os requisitos, montar os casos de uso em uml, testar o ambiente c# (.net 10 + visual studio community) e fazer um programa simples sem orientacao a objetos (so tipos primitivos, operadores e if/else). classes e objetos de dominio, banco de dados, api, autenticacao e telas/web ficam para as proximas etapas com o professor.
+
+suposicoes que fiz: como o enunciado pede multa por dia corrido de atraso mas nao diz o valor, coloquei r$ 2,50 por dia so pra testar o calculo. nao vi diferenca de prazo ou limite no texto entre aluno, professor e funcionario, entao todos seguem 14 dias corridos e ate 3 emprestimos ativos. se nao tiver nenhum exemplar disponivel e tambem nao tiver nenhum emprestado (tipo todos danificados), a reserva nao e feita. e assumi como ponto a confirmar com o professor se multa pendente trava novos emprestimos. 
+
